@@ -13,12 +13,14 @@ This C++ library implements server endpoint for Meteor's [DDP protocol v1](https
 
 ### Build & install
 
-1. wget https://github.com/andrei-markeev/ddpserver/archive/v0.1.0.zip
-2. mkdir build
-3. cd build
-4. cmake ..
-5. make
-6. make install
+1. wget https://github.com/andrei-markeev/ddpserver/archive/master.tar.gz
+2. tar zxf master.tar.gz
+3. cd ddpserver-master
+4. mkdir build
+5. cd build
+6. cmake ..
+7. make
+8. make install
 
 ### Use
 
