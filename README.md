@@ -25,57 +25,37 @@ This C++ library implements server endpoint for Meteor's [DDP protocol v1](https
 ### Use
 
 DdpServer only processes DDP protocol. It should be used with a websocket
-library such as [websocketpp](https://github.com/zaphoyd/websocketpp).
+library. Example below uses [websocketpp](https://github.com/zaphoyd/websocketpp).
 
-C++:
+C++ (full source [here](https://github.com/andrei-markeev/ddpserver/blob/master/examples/websocketpp.cpp)):
 
 ```cpp
-#include <jvar/jvar.h>
-#include <ddpserver.h>
 
-DdpServer ddpServer;
-
-jvar::Variant myMethod1(jvar::Variant& env, jvar::Variant& args)
+jvar::Variant myMethod1(void *context, jvar::Variant& args)
 {
-	if (args.length() < 2)
-		throw;
-
 	return args[0] + args[1];
 }
 
-void onEmit(jvar::Variant& env, std::string s)
+void emitCallback(void *context, std::string output)
 {
-	// use your favorite websocket library and send s to websocket
+    websocketpp::connection_hdl hdl = *(websocketpp::connection_hdl *)context;
+    wsServer->send(hdl, output.c_str(), output.length(), websocketpp::frame::opcode::text);
 }
 
-void websocket_on_message(std::string message)
+void websocket_on_message(websocketpp::connection_hdl hdl, websocket_server::message_ptr msg)
 {
-	ddpServer.process(message);
+    ddpServer->setContext(&hdl);
+    ddpServer->process(msg->get_payload().c_str());
 }
+
+// .. skipped ..
 
 int main(int argc, char** argv)
 {
+	ddpServer = new DdpServer(emitCallback);
+	ddpServer->registerMethod("myMethod1", myMethod1);
 
-	// ...
-
-	ddpServer(onEmit);
-	ddpServer.registerMethod("myMethod1", myMethod1);
-
-	jvar::Variant data;
-	data.createObject();
-	data["something"] = "value";
-
-	ddpServer.emitAdd("coll1", "element1_id", data);
-
-
-	data["something"] = "new value";
-	ddpServer.emitChange("coll1", "element1_id", data);
-
-	ddpServer.emitRemove("coll1", "element1_id");
-	
-	// ...
-	
-	
+	// .. skipped ..
 }
 
 ```
@@ -85,8 +65,6 @@ JavaScript (client-side):
 ```javascript
 MyConnection = DDP.connect("http://localhost:9002");
 
-Collection1 = new Mongo.Collection("coll1", { connection: MyConnection });
-
 MyConnection.call("myMethod1", "param1", "param2", (error, result) => {
 	if (error)
 		alert(error.reason);
@@ -94,11 +72,43 @@ MyConnection.call("myMethod1", "param1", "param2", (error, result) => {
 		console.log(result);
 });
 
+```
+
+Result:
+
+![screenshot](https://github.com/andrei-markeev/ddpserver/blob/master/examples/websocketpp.png)
+
+### Live data
+
+It is also possible to implement Meteor live data:
+
+C++:
+
+```
+    jvar::Variant data;
+    data.createObject();
+    data["something"] = "value";
+	ddpServer->emitAdd("coll1", "element1_id", data);
+	
+    data["something"] = "new value";
+    ddpServer->emitChange("coll1", "element1_id", data);
+
+    ddpServer->emitRemove("coll1", "element1_id");	
+	
+```
+
+JS:
+
+```
+Collection1 = new Mongo.Collection("coll1", { connection: MyConnection });
 
 ```
 
-### Roadmap
+Subscriptions aren't supported for now, all emits will be immediately published
+to the frontend. Subscriptions are planned, but for now you can easily emulate
+them using methods.
 
- - Subscriptions
- - Example of integrating with websocketpp
+### Project roadmap
+
  - Example of Meteor authentication
+ - Subscriptions support

@@ -1,22 +1,19 @@
 #include "ddpserver.h"
 
-DdpServer::DdpServer(void (*onEmit)(jvar::Variant&, std::string))
+DdpServer::DdpServer(emit_callback_type emitCallback)
 {
-    methods.createObject();
-    env.createObject();
-    onEmitCallback = onEmit;
+    context = NULL;
+    onEmitCallback = emitCallback;
 }
 
-void DdpServer::registerMethod(std::string name, jvar::Variant (*method)(jvar::Variant &, jvar::Variant &))
+void DdpServer::registerMethod(std::string name, method_type method)
 {
-    jvar::Variant func;
-    func.createFunction(method);
-    methods[name] = func;
+    *methods.add(name.c_str()) = method;
 }
 
-void DdpServer::setEnv(std::string varName, jvar::Variant value)
+void DdpServer::setContext(void *ctx)
 {
-    env[varName] = value;
+    context = ctx;
 }
 
 void DdpServer::process(std::string input)
@@ -58,7 +55,7 @@ void DdpServer::process(std::string input)
     if (responseArray.length() == 0)
         return;
 
-    onEmitCallback(env, "a" + responseArray.toJsonString());
+    onEmitCallback(context, "a" + responseArray.toJsonString());
 }
 
 jvar::Variant DdpServer::processPing(jvar::Variant packet)
@@ -84,7 +81,7 @@ jvar::Variant DdpServer::processConnect(jvar::Variant packet)
 
     response.createObject();
     response["msg"] = "connected";
-    if (packet["session"].isEmpty())
+    if (!packet.hasProperty("session"))
         response["session"] = getRandomId(10);
     else
         response["session"] = packet["session"];
@@ -120,7 +117,7 @@ jvar::Variant DdpServer::processUnsub(jvar::Variant packet)
     if (packet["msg"] != "unsub")
         return response;
 
-    // TODO: perform callback when unsubscribing
+    // TODO: perform callback when unsubscribing?
 
     return response;
 
@@ -139,7 +136,8 @@ jvar::Variant DdpServer::processMethod(jvar::Variant packet)
     std::string methodName = packet["method"].toString();
     try
     {
-        if (!methods.hasProperty(methodName.c_str()))
+        method_type *m = methods.get(methodName.c_str());
+        if (!m)
         {
             error.createObject();
             error["error"] = "500";
@@ -147,24 +145,7 @@ jvar::Variant DdpServer::processMethod(jvar::Variant packet)
         }
         else
         {
-            jvar::Variant method = methods[methodName];
-            for (jvar::Iter<jvar::Variant> i; env.forEach(i); )
-                method[i.key()] = *i;
-
-            if (packet["params"].length() == 0)
-                returnValue = method();
-            else if (packet["params"].length() == 1)
-                returnValue = method(packet["params"][0]);
-            else if (packet["params"].length() == 2)
-                returnValue = method(packet["params"][0], packet["params"][1]);
-            else if (packet["params"].length() == 3)
-                returnValue = method(packet["params"][0], packet["params"][1], packet["params"][2]);
-            else if (packet["params"].length() == 4)
-                returnValue = method(packet["params"][0], packet["params"][1], packet["params"][2], packet["params"][3]);
-            else
-                // more than 4 arguments aren't not supported for now
-                throw;
-
+            returnValue = (*m)(context, packet["params"]);
         }
     }
     catch (std::exception& ex)
@@ -226,7 +207,7 @@ void DdpServer::emitAdd(std::string collectionName, std::string id, jvar::Varian
     jvar::Variant responseArray;
     responseArray.createArray();
     responseArray.push(data.toJsonString());
-    onEmitCallback(env, "a" + responseArray.toJsonString());
+    onEmitCallback(context, "a" + responseArray.toJsonString());
 }
 
 void DdpServer::emitChange(std::string collectionName, std::string id, jvar::Variant fields)
@@ -241,7 +222,7 @@ void DdpServer::emitChange(std::string collectionName, std::string id, jvar::Var
     jvar::Variant responseArray;
     responseArray.createArray();
     responseArray.push(data.toJsonString());
-    onEmitCallback(env, "a" + responseArray.toJsonString());
+    onEmitCallback(context, "a" + responseArray.toJsonString());
 }
 
 void DdpServer::emitRemove(std::string collectionName, std::string id)
@@ -255,5 +236,5 @@ void DdpServer::emitRemove(std::string collectionName, std::string id)
     jvar::Variant responseArray;
     responseArray.createArray();
     responseArray.push(data.toJsonString());
-    onEmitCallback(env, "a" + responseArray.toJsonString());
+    onEmitCallback(context, "a" + responseArray.toJsonString());
 }

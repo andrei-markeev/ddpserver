@@ -7,9 +7,12 @@ class DdpServer {
 
 private:
 
-    jvar::Variant methods;
-    jvar::Variant env;
-    void (*onEmitCallback)(jvar::Variant&, std::string);
+    typedef jvar::Variant (*method_type)(void *, jvar::Variant& args);
+    typedef void (*emit_callback_type)(void *, std::string);
+
+    jvar::PropArray<method_type> methods;
+    void *context;
+    emit_callback_type onEmitCallback;
 
     std::string getRandomId(int len);
 
@@ -21,15 +24,15 @@ private:
 
 public:
 
-    DdpServer(void (*onEmit)(jvar::Variant&, std::string));
-    void setEnv(std::string varName, jvar::Variant value);
+    DdpServer(emit_callback_type emitCallback);
+    void setContext(void *context);
 
     void process(std::string input);
     void emitAdd(std::string collectionName, std::string id, jvar::Variant fields);
     void emitChange(std::string collectionName, std::string id, jvar::Variant fields);
     void emitRemove(std::string collectionName, std::string id);
 
-    void registerMethod(std::string name, jvar::Variant (*method)(jvar::Variant &, jvar::Variant &));
+    void registerMethod(std::string name, method_type method);
 
 };
 
