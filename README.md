@@ -24,10 +24,10 @@ This C++ library implements server endpoint for Meteor's [DDP protocol v1](https
 
 ### Use
 
-DdpServer only processes DDP protocol. It should be used with a websocket
-library. Example below uses [websocketpp](https://github.com/zaphoyd/websocketpp).
+DdpServer only processes DDP protocol. It should be used with some websocket
+library. Example below uses [websocketpp](https://github.com/zaphoyd/websocketpp). [Libwebsockets](https://libwebsockets.org) example is also available, see [examples/libwebsockets.cpp](https://github.com/andrei-markeev/ddpserver/blob/master/examples/libwebsockets.cpp).
 
-C++ (full source [here](https://github.com/andrei-markeev/ddpserver/blob/master/examples/websocketpp.cpp)):
+C++ (full source: [examples/websocketpp.cpp](https://github.com/andrei-markeev/ddpserver/blob/master/examples/websocketpp.cpp)):
 
 ```cpp
 
