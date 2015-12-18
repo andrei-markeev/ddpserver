@@ -108,5 +108,7 @@ them using methods.
 
 ### Project roadmap
 
+ - Example integrating with libwebsockets
  - Example of Meteor authentication
  - Subscriptions support
+ 
