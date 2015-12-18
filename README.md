@@ -84,24 +84,22 @@ It is also possible to implement Meteor live data:
 
 C++:
 
-```
-    jvar::Variant data;
-    data.createObject();
-    data.addProperty("something", "value");
-	ddpServer->emitAdd("coll1", "element1_id", data);
-	
-    data["something"] = "new value";
-    ddpServer->emitChange("coll1", "element1_id", data);
+```cpp
+jvar::Variant data;
+data.createObject();
+data.addProperty("something", "value");
+ddpServer->emitAdd("coll1", "element1_id", data);
 
-    ddpServer->emitRemove("coll1", "element1_id");	
-	
+data["something"] = "new value";
+ddpServer->emitChange("coll1", "element1_id", data);
+
+ddpServer->emitRemove("coll1", "element1_id");	
 ```
 
 JS:
 
-```
+```js
 Collection1 = new Mongo.Collection("coll1", { connection: MyConnection });
-
 ```
 
 Subscriptions aren't supported for now, all emits will be immediately published
