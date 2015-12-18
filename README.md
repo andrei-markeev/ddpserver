@@ -87,7 +87,7 @@ C++:
 ```
     jvar::Variant data;
     data.createObject();
-    data["something"] = "value";
+    data.addProperty("something", "value");
 	ddpServer->emitAdd("coll1", "element1_id", data);
 	
     data["something"] = "new value";

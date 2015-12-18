@@ -65,9 +65,9 @@ jvar::Variant DdpServer::processPing(jvar::Variant packet)
         return response;
 
     response.createObject();
-    response["msg"] = "pong";
+    response.addProperty("msg", "pong");
     if (!packet["id"].empty())
-        response["id"] = packet["id"];
+        response.addProperty("id", packet["id"]);
 
     return response;
 }
@@ -80,11 +80,11 @@ jvar::Variant DdpServer::processConnect(jvar::Variant packet)
         return response;
 
     response.createObject();
-    response["msg"] = "connected";
+    response.addProperty("msg", "connected");
     if (!packet.hasProperty("session"))
-        response["session"] = getRandomId(10);
+        response.addProperty("session", getRandomId(10));
     else
-        response["session"] = packet["session"];
+        response.addProperty("session", packet["session"]);
 
     return response;
 }
@@ -103,8 +103,8 @@ jvar::Variant DdpServer::processSub(jvar::Variant packet)
     subs.push(packet["id"]);
 
     response.createObject();
-    response["msg"] = "ready";
-    response["subs"] = subs;
+    response.addProperty("msg", "ready");
+    response.addProperty("subs", subs);
 
     return response;
 
@@ -140,8 +140,8 @@ jvar::Variant DdpServer::processMethod(jvar::Variant packet)
         if (!m)
         {
             error.createObject();
-            error["error"] = "500";
-            error["reason"] = "Method not found";
+            error.addProperty("error", "500");
+            error.addProperty("reason", "Method not found");
         }
         else
         {
@@ -151,28 +151,28 @@ jvar::Variant DdpServer::processMethod(jvar::Variant packet)
     catch (std::exception& ex)
     {
         error.createObject();
-        error["error"] = "500";
-        error["reason"] = ex.what();
+        error.addProperty("error", "500");
+        error.addProperty("reason", ex.what());
     }
 
     response.createArray();
 
     jvar::Variant result;
-    result["msg"] = "result";
-    result["id"] = packet["id"];
-    result["result"] = returnValue;
+    result.createObject();
+    result.addProperty("msg", "result");
+    result.addProperty("id", packet["id"]);
+    result.addProperty("result", returnValue);
     if (!error.isEmpty())
-        result["error"] = error;
+        result.addProperty("error", error);
 
     jvar::Variant updatedIds;
     updatedIds.createArray();
     updatedIds.push(packet["id"]);
 
     jvar::Variant updated;
-    updated.clear();
     updated.createObject();
-    updated["msg"] = "updated";
-    updated["methods"] = updatedIds;
+    updated.addProperty("msg", "updated");
+    updated.addProperty("methods", updatedIds);
 
     response.push(result);
     response.push(updated);
@@ -199,10 +199,10 @@ void DdpServer::emitAdd(std::string collectionName, std::string id, jvar::Varian
 {
     jvar::Variant data;
     data.createObject();
-    data["msg"] = "added";
-    data["collection"] = collectionName;
-    data["id"] = id;
-    data["fields"] = fields;
+    data.addProperty("msg", "added");
+    data.addProperty("collection", collectionName);
+    data.addProperty("id", id);
+    data.addProperty("fields", fields);
 
     jvar::Variant responseArray;
     responseArray.createArray();
@@ -214,10 +214,10 @@ void DdpServer::emitChange(std::string collectionName, std::string id, jvar::Var
 {
     jvar::Variant data;
     data.createObject();
-    data["msg"] = "changed";
-    data["collection"] = collectionName;
-    data["id"] = id;
-    data["fields"] = fields;
+    data.addProperty("msg", "changed");
+    data.addProperty("collection", collectionName);
+    data.addProperty("id", id);
+    data.addProperty("fields", fields);
 
     jvar::Variant responseArray;
     responseArray.createArray();
@@ -229,9 +229,9 @@ void DdpServer::emitRemove(std::string collectionName, std::string id)
 {
     jvar::Variant data;
     data.createObject();
-    data["msg"] = "removed";
-    data["collection"] = collectionName;
-    data["id"] = id;
+    data.addProperty("msg", "removed");
+    data.addProperty("collection", collectionName);
+    data.addProperty("id", id);
 
     jvar::Variant responseArray;
     responseArray.createArray();
