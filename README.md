@@ -24,10 +24,15 @@ This C++ library implements server endpoint for Meteor's [DDP protocol v1](https
 
 ### Use
 
-DdpServer only processes DDP protocol. It should be used with some websocket
-library. Example below uses [websocketpp](https://github.com/zaphoyd/websocketpp). [Libwebsockets](https://libwebsockets.org) example is also available, see [examples/libwebsockets.cpp](https://github.com/andrei-markeev/ddpserver/blob/master/examples/libwebsockets.cpp).
+DdpServer only processes DDP protocol itself. It should be used with some websocket library. Examples of integrating with following libraries are available:
+ - [mongoose](https://github.com/cesanta/mongoose): [examples/mongoose.cpp](https://github.com/andrei-markeev/ddpserver/blob/master/examples/mongoose.cpp).
+ - [websocketpp](https://github.com/zaphoyd/websocketpp): [examples/websocketpp.cpp](https://github.com/andrei-markeev/ddpserver/blob/master/examples/websocketpp.cpp).
+ - [libwebsockets](https://libwebsockets.org): [examples/libwebsockets.cpp](https://github.com/andrei-markeev/ddpserver/blob/master/examples/libwebsockets.cpp).
+Other libraries can be integrated similarly.
 
-C++ (full source: [examples/websocketpp.cpp](https://github.com/andrei-markeev/ddpserver/blob/master/examples/websocketpp.cpp)):
+Example below uses websocketpp.
+
+C++:
 
 ```cpp
 
@@ -45,7 +50,7 @@ void emitCallback(void *context, std::string output)
 void websocket_on_message(websocketpp::connection_hdl hdl, websocket_server::message_ptr msg)
 {
     ddpServer->setContext(&hdl);
-    ddpServer->process(msg->get_payload().c_str());
+    ddpServer->process(msg->get_payload());
 }
 
 // .. skipped ..
@@ -108,7 +113,6 @@ them using methods.
 
 ### Project roadmap
 
- - Example integrating with libwebsockets
  - Example of Meteor authentication
  - Subscriptions support
- 
+

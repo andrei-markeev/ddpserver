@@ -33,7 +33,7 @@ void websocket_on_open(websocketpp::connection_hdl hdl)
 void websocket_on_message(websocketpp::connection_hdl hdl, websocket_server::message_ptr msg)
 {
     ddpServer->setContext(&hdl);
-    ddpServer->process(msg->get_payload().c_str());
+    ddpServer->process(msg->get_payload());
 }
 
 // sockjs emulation
