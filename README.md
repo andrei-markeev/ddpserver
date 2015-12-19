@@ -25,9 +25,10 @@ This C++ library implements server endpoint for Meteor's [DDP protocol v1](https
 ### Use
 
 DdpServer only processes DDP protocol itself. It should be used with some websocket library. Examples of integrating with following libraries are available:
- - [mongoose](https://github.com/cesanta/mongoose): [examples/mongoose.cpp](https://github.com/andrei-markeev/ddpserver/blob/master/examples/mongoose.cpp).
- - [websocketpp](https://github.com/zaphoyd/websocketpp): [examples/websocketpp.cpp](https://github.com/andrei-markeev/ddpserver/blob/master/examples/websocketpp.cpp).
- - [libwebsockets](https://libwebsockets.org): [examples/libwebsockets.cpp](https://github.com/andrei-markeev/ddpserver/blob/master/examples/libwebsockets.cpp).
+ - [mongoose](https://github.com/cesanta/mongoose) - [examples/mongoose.cpp](https://github.com/andrei-markeev/ddpserver/blob/master/examples/mongoose.cpp).
+ - [websocketpp](https://github.com/zaphoyd/websocketpp) - [examples/websocketpp.cpp](https://github.com/andrei-markeev/ddpserver/blob/master/examples/websocketpp.cpp).
+ - [libwebsockets](https://libwebsockets.org) - [examples/libwebsockets.cpp](https://github.com/andrei-markeev/ddpserver/blob/master/examples/libwebsockets.cpp).
+
 Other libraries can be integrated similarly.
 
 Example below uses websocketpp.
@@ -92,11 +93,19 @@ C++:
 ```cpp
 jvar::Variant data;
 data.createObject();
-data.addProperty("something", "value");
+data.addProperty("banana", "value");
+data.addProperty("tomato", 1234);
+data.addProperty("kiwi", "something");
 ddpServer->emitAdd("coll1", "element1_id", data);
 
-data["something"] = "new value";
-ddpServer->emitChange("coll1", "element1_id", data);
+// ...
+
+jvar::Variant changeData;
+changeData.createObject();
+changeData.addProperty("banana", "new_value");
+ddpServer->emitChange("coll1", "element1_id", changeData);
+
+// ...
 
 ddpServer->emitRemove("coll1", "element1_id");	
 ```
