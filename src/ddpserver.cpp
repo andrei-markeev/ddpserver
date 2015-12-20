@@ -16,7 +16,7 @@ void DdpServer::setContext(void *ctx)
     context = ctx;
 }
 
-void DdpServer::process(std::string input)
+void DdpServer::process(const std::string &input)
 {
     jvar::Variant inputData;
     if (!inputData.parseJson(input.c_str()))
@@ -58,7 +58,7 @@ void DdpServer::process(std::string input)
     onEmitCallback(context, "a" + responseArray.toJsonString());
 }
 
-jvar::Variant DdpServer::processPing(jvar::Variant packet)
+jvar::Variant DdpServer::processPing(jvar::Variant& packet)
 {
     jvar::Variant response;
     if (packet["msg"] != "ping")
@@ -72,7 +72,7 @@ jvar::Variant DdpServer::processPing(jvar::Variant packet)
     return response;
 }
 
-jvar::Variant DdpServer::processConnect(jvar::Variant packet)
+jvar::Variant DdpServer::processConnect(jvar::Variant &packet)
 {
     jvar::Variant response;
 
@@ -89,7 +89,7 @@ jvar::Variant DdpServer::processConnect(jvar::Variant packet)
     return response;
 }
 
-jvar::Variant DdpServer::processSub(jvar::Variant packet)
+jvar::Variant DdpServer::processSub(jvar::Variant &packet)
 {
     jvar::Variant response;
 
@@ -110,7 +110,7 @@ jvar::Variant DdpServer::processSub(jvar::Variant packet)
 
 }
 
-jvar::Variant DdpServer::processUnsub(jvar::Variant packet)
+jvar::Variant DdpServer::processUnsub(jvar::Variant &packet)
 {
     jvar::Variant response;
 
@@ -124,7 +124,7 @@ jvar::Variant DdpServer::processUnsub(jvar::Variant packet)
 }
 
 
-jvar::Variant DdpServer::processMethod(jvar::Variant packet)
+jvar::Variant DdpServer::processMethod(jvar::Variant &packet)
 {
     jvar::Variant response;
 
@@ -195,7 +195,7 @@ std::string DdpServer::getRandomId(int len)
     return s;
 }
 
-void DdpServer::emitAdd(std::string collectionName, std::string id, jvar::Variant fields)
+void DdpServer::emitAdd(std::string collectionName, std::string id, jvar::Variant &fields)
 {
     jvar::Variant data;
     data.createObject();
@@ -210,7 +210,7 @@ void DdpServer::emitAdd(std::string collectionName, std::string id, jvar::Varian
     onEmitCallback(context, "a" + responseArray.toJsonString());
 }
 
-void DdpServer::emitChange(std::string collectionName, std::string id, jvar::Variant fields)
+void DdpServer::emitChange(std::string collectionName, std::string id, jvar::Variant &fields)
 {
     jvar::Variant data;
     data.createObject();

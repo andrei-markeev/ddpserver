@@ -75,7 +75,7 @@ int websocketCallback(lws *wsi, lws_callback_reasons reason, void *user, void *i
 
 }
 
-void emitCallback(void *context, std::string output)
+void emitCallback(void *context, const std::string &output)
 {
     lws *wsi = (lws *)context;
     writeToWebSocket(wsi, output, LWS_WRITE_TEXT);

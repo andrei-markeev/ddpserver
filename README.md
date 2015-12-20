@@ -42,7 +42,7 @@ jvar::Variant myMethod1(void *context, jvar::Variant& args)
 	return args[0] + args[1];
 }
 
-void emitCallback(void *context, std::string output)
+void emitCallback(void *context, const std::string &output)
 {
     websocketpp::connection_hdl hdl = *(websocketpp::connection_hdl *)context;
     wsServer->send(hdl, output.c_str(), output.length(), websocketpp::frame::opcode::text);

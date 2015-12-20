@@ -47,7 +47,7 @@ jvar::Variant myMethod1(void *context, jvar::Variant& args)
     return args[0] + args[1];
 }
 
-void emitCallback(void *context, std::string output)
+void emitCallback(void *context, const std::string &output)
 {
     struct mg_connection *nc = (struct mg_connection *)context;
     mg_send_websocket_frame(nc, WEBSOCKET_OP_TEXT, output.c_str(), (size_t)output.length());
