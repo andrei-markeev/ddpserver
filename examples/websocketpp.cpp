@@ -3,8 +3,8 @@
 // $ g++ websocketpp.cpp -lboost_system -lboost_chrono -ljvar -lddpserver -o example
 // $ ./example
 
-#include <jvar/jvar.h>
-#include <ddpserver.h>
+#include "jvar.h"
+#include "ddpserver.h"
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 #include <boost/lexical_cast.hpp>

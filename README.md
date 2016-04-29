@@ -9,18 +9,21 @@ This C++ library implements server endpoint for Meteor's [DDP protocol v1](https
 
 ### Dependencies
 
-1. [jvar](https://github.com/YasserAsmi/jvar) - low-memory JSON serialization library
+  * CMake 2.8+
+
+  * Modern GCC/Clang
 
 ### Build & install
 
-1. wget https://github.com/andrei-markeev/ddpserver/archive/master.tar.gz
-2. tar zxf master.tar.gz
-3. cd ddpserver-master
-4. mkdir build
-5. cd build
-6. cmake ..
-7. make
-8. make install
+  * mkdir build
+
+  * cd build
+
+  * cmake ..
+
+  * make
+
+  * make install
 
 ### Use
 

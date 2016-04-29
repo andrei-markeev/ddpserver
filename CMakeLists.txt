@@ -1,21 +1,28 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 project(ddpserver)
 
-include_directories("include/")
-link_directories("lib/")
+include(ExternalProject)
 
-set(LIBRARY_OUTPUT_PATH  "lib/")
+set(LIBPREFIX "${CMAKE_STATIC_LIBRARY_PREFIX}")
+set(LIBSUFFIX "${CMAKE_STATIC_LIBRARY_SUFFIX}")
+set(CMAKE_VERBOSE_MAKEFILE ON)
+if("${LIBRARY_OUTPUT_PATH}" STREQUAL "")
+    MESSAGE( WARN " SETTING LIBRARY_OUTPUT_PATH")
+    SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
+    MESSAGE( STATUS "LIBRARY_OUTPUT_PATH IS:     " ${LIBRARY_OUTPUT_PATH} )
+endif()
+if("${EXECUTABLE_OUTPUT_PATH}" STREQUAL "")
+    MESSAGE( WARN " SETTING EXECUTABLE_OUTPUT_PATH")
+    SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+    MESSAGE( STATUS "EXECUTABLE_OUTPUT_PATH IS:     " ${EXECUTABLE_OUTPUT_PATH} )
+endif()
+if("${CMAKE_MODULE_PATH}" STREQUAL "")
+    MESSAGE( WARN " SETTING EXECUTABLE_OUTPUT_PATH")
+    SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+    MESSAGE( STATUS "CMAKE_MODULE_PATH IS:     " ${CMAKE_MODULE_PATH} )
+endif()
 
-if(CMAKE_COMPILER_IS_GNUCXX)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall")
-endif(CMAKE_COMPILER_IS_GNUCXX)
-
-add_library(ddpserver STATIC src/ddpserver.cpp)
-
-install (TARGETS ddpserver
-	     ARCHIVE DESTINATION lib
-         LIBRARY DESTINATION lib
-         RUNTIME DESTINATION bin)
-
-install (DIRECTORY include/ DESTINATION include/)
+add_subdirectory(src)
+# NOTE: There are some missing dependencies in this directory
+#add_subdirectory(examples)
