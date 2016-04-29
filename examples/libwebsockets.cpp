@@ -3,9 +3,9 @@
 // $ g++ libwebsockets.cpp -lwebsockets -ljvar -lddpserver -o example
 // $ ./example
 
-#include <jvar/jvar.h>
-#include <ddpserver.h>
-#include <libwebsockets.h>
+#include "jvar.h"
+#include "ddpserver.h"
+#include "libwebsockets.h"
 
 DdpServer *ddpServer;
 unsigned char buf[2048];
