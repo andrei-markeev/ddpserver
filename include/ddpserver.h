@@ -1,7 +1,7 @@
 #ifndef DDPSERVER_H
 #define DDPSERVER_H
 
-#include <jvar/jvar.h>
+#include "jvar.h"
 
 class DdpServer {
 
