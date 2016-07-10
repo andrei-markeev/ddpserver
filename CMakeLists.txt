@@ -6,7 +6,6 @@ include(ExternalProject)
 
 set(LIBPREFIX "${CMAKE_STATIC_LIBRARY_PREFIX}")
 set(LIBSUFFIX "${CMAKE_STATIC_LIBRARY_SUFFIX}")
-set(CMAKE_VERBOSE_MAKEFILE ON)
 if("${LIBRARY_OUTPUT_PATH}" STREQUAL "")
     MESSAGE( WARN " SETTING LIBRARY_OUTPUT_PATH")
     SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
@@ -24,5 +23,3 @@ if("${CMAKE_MODULE_PATH}" STREQUAL "")
 endif()
 
 add_subdirectory(src)
-# NOTE: There are some missing dependencies in this directory
-#add_subdirectory(examples)

@@ -8,10 +8,8 @@ file(GLOB DDP_HEADERS
 
 include_directories(
 	${DDP_INCLUDES}
-	${JVAR_INCLUDES}
 )
 
-#TODO: Check compiler for modern C++ support
 if(CMAKE_COMPILER_IS_GNUCXX)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall")
 endif(CMAKE_COMPILER_IS_GNUCXX)

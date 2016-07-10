@@ -1,9 +1,10 @@
 // build and run:
 //
-// $ g++ mongoose.cpp -lmongoose -ljvar -lddpserver -o example
+// $ wget https://github.com/cesanta/mongoose/raw/master/mongoose.c
+// $ wget https://github.com/cesanta/mongoose/raw/master/mongoose.h
+// $ g++ mongoose.cpp mongoose.c -ljvar -lddpserver -o example
 // $ ./example
 
-// NOTE: We need to add this dependency still
 #include "mongoose.h"
 #include <ddpserver.h>
 #include <jvar/jvar.h>

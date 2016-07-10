@@ -4,7 +4,7 @@ externalproject_add(JVAR
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/third_party/jvar
     CONFIGURE_COMMAND ""
     BUILD_COMMAND cmake ${CMAKE_SOURCE_DIR}/third_party/jvar
-    INSTALL_COMMAND ""
+    INSTALL_COMMAND make install
     BUILD_IN_SOURCE 1
 )
 set(JVAR_INCLUDES ${CMAKE_SOURCE_DIR}/third_party/jvar/include)
