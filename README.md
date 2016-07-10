@@ -4,25 +4,23 @@ This C++ library implements server endpoint for Meteor's [DDP protocol v1](https
 
 ### Use cases
 
-- Provide a custom live data source from your C++ application to Meteor frontend
-- Call your C++ methods from Meteor
+  * Provide a custom live data source from your C++ application to Meteor frontend
+  * Call your C++ methods from Meteor
 
 ### Dependencies
 
   * CMake 2.8+
-
-  * Modern GCC/Clang
+  * [jvar](https://github.com/YasserAsmi/jvar) - low-memory JSON serialization library (will be fetched and built automatically by CMake)
 
 ### Build & install
 
+  * wget https://github.com/andrei-markeev/ddpserver/archive/master.tar.gz
+  * tar zxf master.tar.gz
+  * cd ddpserver-master
   * mkdir build
-
   * cd build
-
   * cmake ..
-
   * make
-
   * make install
 
 ### Use
@@ -123,8 +121,17 @@ Subscriptions aren't supported for now, all emits will be immediately published
 to the frontend. Subscriptions are planned, but for now you can easily emulate
 them using methods.
 
+### Meteor auth integration
+
+It is possible to integrate Meteor authentication with DDP server.
+Meteor stores loginToken on client. Idea is to pass it along with the user id to C++ 
+application, and then verify it by performing a separate request to Meteor REST API:
+
+Example code:
+ * [examples/meteor_auth.js](https://github.com/andrei-markeev/ddpserver/blob/master/examples/meteor_auth.js).
+ * [examples/meteor_auth.cpp](https://github.com/andrei-markeev/ddpserver/blob/master/examples/meteor_auth.cpp).
+
 ### Project roadmap
 
- - Example of Meteor authentication
- - Subscriptions support
+ * Subscriptions support
 
